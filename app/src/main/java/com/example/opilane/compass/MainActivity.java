@@ -10,14 +10,16 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private ImageView kompassPic;
-    TextView suund;
+    TextView suund, loe;
     private float algsedKraadid = 0f;
 
     private SensorManager sensorManager;
+    boolean running = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         kompassPic = findViewById(R.id.kompassPic);
         suund = findViewById(R.id.nurk);
+        loe = (TextView) findViewById(R.id.loe);
 
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
     }
@@ -33,14 +36,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
+        running = true;
 
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                 SensorManager.SENSOR_DELAY_GAME);
+        Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (countSensor != null){
+            sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_UI);
+        } else {
+            Toast.makeText(this,"Sensor not found!", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        running = false;
 
         sensorManager.unregisterListener(this);
     }
@@ -48,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        if (running){
+            loe.setText(String.valueOf(event.values[0]));
+        }
 
         float kraadinurk = Math.round(event.values[0]);
         suund.setText("Suund: " + Float.toString(kraadinurk) + " kraadi");

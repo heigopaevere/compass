@@ -9,6 +9,21 @@
     tools:context="com.example.opilane.compass.MainActivity">
 
     <TextView
+        android:text="Sammud:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/loe"
+        android:text="0"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"/>
+
+    <TextView
         android:id="@+id/nurk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
